@@ -5,185 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Grade Calculator</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+  <!-- Google AdSense -->
+  <script async 
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9357039039607923"
+      crossorigin="anonymous"></script>
 
+  <style>
     body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #6366f1, #9333ea);
+      font-family: system-ui, sans-serif;
     }
 
     .card {
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 16px;
+      background: white;
+      padding: 30px;
       width: 100%;
-      max-width: 380px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    h1 {
+      max-width: 400px;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px rgba(0,0,0,.15);
       text-align: center;
-      margin-bottom: 24px;
-      font-size: 24px;
-      color: #333;
     }
 
-    input {
+    input, button {
       width: 100%;
       padding: 14px;
-      font-size: 16px;
+      margin-top: 12px;
       border-radius: 10px;
       border: 1px solid #ddd;
-      outline: none;
-      margin-bottom: 16px;
-    }
-
-    input:focus {
-      border-color: #667eea;
+      font-size: 16px;
     }
 
     button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: #667eea;
+      background: #6366f1;
       color: white;
       font-weight: 600;
+      cursor: pointer;
+      border: none;
     }
 
-    button:hover {
-      background: #5a6fe0;
+    .result { margin-top: 20px; }
+    .improve { color: #16a34a; margin-top: 8px; }
+    .fail { color: #dc2626; font-weight: 600; }
+
+    .premium {
+      margin-top: 20px;
+      background: #facc15;
+      color: #000;
     }
 
-    .result {
-      margin-top: 24px;
-      text-align: center;
-    }
-
-    .grade {
-      font-size: 20px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .points {
-      font-size: 16px;
-      color: #555;
-      margin-top: 4px;
-    }
-
-    .improve {
-      margin-top: 10px;
-      color: #16a34a;
-      font-weight: 500;
-    }
-
-    .fail {
-      margin-top: 10px;
-      color: #dc2626;
-      font-weight: 600;
+    .ad {
+      margin-top: 20px;
     }
   </style>
 </head>
 
 <body>
   <div class="card">
-    <h1>Grade Calculator</h1>
+    <h2>Grade Calculator</h2>
 
-    <input
-      type="number"
-      id="marks"
-      placeholder="Enter marks out of 100"
-      min="0"
-      max="100"
-    />
-
-    <button onclick="calculateGrade()">Calculate</button>
+    <input type="number" id="marks" placeholder="Enter marks out of 100" />
+    <button onclick="calculate()">Calculate</button>
 
     <div class="result" id="result"></div>
+
+    <!-- Ads (hidden for premium users) -->
+    <div class="ad" id="adBox">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9357039039607923"
+           data-ad-slot="1234567890"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- Premium Unlock Button -->
+    <button class="premium" onclick="buyPremium()" id="premiumBtn">
+      Unlock Premium – $1 (Remove Ads)
+    </button>
   </div>
 
-  <script>
-    function calculateGrade() {
-      const marks = Number(document.getElementById("marks").value);
-      const result = document.getElementById("result");
+<script>
+  // Check premium status
+  const isPremium = localStorage.getItem("premium");
+  if (isPremium) {
+    document.getElementById("adBox").style.display = "none";
+    document.getElementById("premiumBtn").style.display = "none";
+  }
 
-      if (marks < 0 || marks > 100 || isNaN(marks)) {
-        result.innerHTML = "<p class='fail'>Please enter valid marks (0–100)</p>";
-        return;
-      }
+  // Grade calculator logic
+  function calculate() {
+    const m = Number(document.getElementById("marks").value);
+    const r = document.getElementById("result");
 
-      let grade = "";
-      let points = "";
-      let nextMark = null;
-      let nextGrade = "";
-      let nextPoint = "";
-
-      if (marks >= 85) {
-        grade = "O";
-        points = 10;
-      } else if (marks >= 75) {
-        grade = "A+";
-        points = 9;
-        nextMark = 85 - marks;
-        nextGrade = "O";
-        nextPoint = 10;
-      } else if (marks >= 65) {
-        grade = "A";
-        points = 8;
-        nextMark = 75 - marks;
-        nextGrade = "A+";
-        nextPoint = 9;
-      } else if (marks >= 55) {
-        grade = "B+";
-        points = 7;
-        nextMark = 65 - marks;
-        nextGrade = "A";
-        nextPoint = 8;
-      } else if (marks >= 45) {
-        grade = "B";
-        points = 6;
-        nextMark = 55 - marks;
-        nextGrade = "B+";
-        nextPoint = 7;
-      } else if (marks >= 35) {
-        grade = "C";
-        points = 5;
-        nextMark = 45 - marks;
-        nextGrade = "B";
-        nextPoint = 6;
-      } else {
-        result.innerHTML =
-          "<p class='fail'>Fail<br>Start saving for supplementary exam dear</p>";
-        return;
-      }
-
-      let html = `
-        <div class="grade">Your grade is ${grade}</div>
-        <div class="points">Grade point: ${points}</div>
-      `;
-
-      if (nextMark !== null) {
-        html += `
-          <div class="improve">
-            You need ${nextMark} more marks to reach ${nextGrade} grade and ${nextPoint} grade points.
-          </div>
-        `;
-      }
-
-      result.innerHTML = html;
+    if (m < 0 || m > 100 || isNaN(m)) {
+      r.innerHTML = "<div class='fail'>Enter valid marks (0–100)</div>";
+      return;
     }
-  </script>
+
+    let g, p, need, ng, np;
+
+    if (m >= 85) { g="O"; p=10; }
+    else if (m >= 75) { g="A+"; p=9; need=85-m; ng="O"; np=10; }
+    else if (m >= 65) { g="A"; p=8; need=75-m; ng="A+"; np=9; }
+    else if (m >= 55) { g="B+"; p=7; need=65-m; ng="A"; np=8; }
+    else if (m >= 45) { g="B"; p=6; need=55-m; ng="B+"; np=7; }
+    else if (m >= 35) { g="C"; p=5; need=45-m; ng="B"; np=6; }
+    else {
+      r.innerHTML = "<div class='fail'>Fail<br>Start saving for supplementary exam dear</div>";
+      return;
+    }
+
+    r.innerHTML = `
+      <div><strong>Your grade is ${g}</strong></div>
+      <div>Grade point: ${p}</div>
+      ${need ? `<div class="improve">You need ${need} more marks for ${ng} (${np})</div>` : ""}
+    `;
+  }
+
+  // Premium button logic
+  function buyPremium() {
+    // Replace with your Stripe Payment Link
+    window.location.href = "https://buy.stripe.com/test_XXXXXXXXXX";
+  }
+
+  // Optional: handle Stripe redirect for premium unlock
+  if (new URLSearchParams(window.location.search).get("premium")) {
+    localStorage.setItem("premium", "true");
+    window.history.replaceState({}, document.title, "/");
+    document.getElementById("adBox").style.display = "none";
+    document.getElementById("premiumBtn").style.display = "none";
+  }
+</script>
 </body>
 </html>
