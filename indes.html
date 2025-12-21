@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade Calculator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    input:focus {
+      border-color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #5a6fe0;
+    }
+
+    .result {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .grade {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .points {
+      font-size: 16px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    .improve {
+      margin-top: 10px;
+      color: #16a34a;
+      font-weight: 500;
+    }
+
+    .fail {
+      margin-top: 10px;
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Grade Calculator</h1>
+
+    <input
+      type="number"
+      id="marks"
+      placeholder="Enter marks out of 100"
+      min="0"
+      max="100"
+    />
+
+    <button onclick="calculateGrade()">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateGrade() {
+      const marks = Number(document.getElementById("marks").value);
+      const result = document.getElementById("result");
+
+      if (marks < 0 || marks > 100 || isNaN(marks)) {
+        result.innerHTML = "<p class='fail'>Please enter valid marks (0–100)</p>";
+        return;
+      }
+
+      let grade = "";
+      let points = "";
+      let nextMark = null;
+      let nextGrade = "";
+      let nextPoint = "";
+
+      if (marks >= 85) {
+        grade = "O";
+        points = 10;
+      } else if (marks >= 75) {
+        grade = "A+";
+        points = 9;
+        nextMark = 85 - marks;
+        nextGrade = "O";
+        nextPoint = 10;
+      } else if (marks >= 65) {
+        grade = "A";
+        points = 8;
+        nextMark = 75 - marks;
+        nextGrade = "A+";
+        nextPoint = 9;
+      } else if (marks >= 55) {
+        grade = "B+";
+        points = 7;
+        nextMark = 65 - marks;
+        nextGrade = "A";
+        nextPoint = 8;
+      } else if (marks >= 45) {
+        grade = "B";
+        points = 6;
+        nextMark = 55 - marks;
+        nextGrade = "B+";
+        nextPoint = 7;
+      } else if (marks >= 35) {
+        grade = "C";
+        points = 5;
+        nextMark = 45 - marks;
+        nextGrade = "B";
+        nextPoint = 6;
+      } else {
+        result.innerHTML =
+          "<p class='fail'>Fail<br>Start saving for supplementary exam dear</p>";
+        return;
+      }
+
+      let html = `
+        <div class="grade">Your grade is ${grade}</div>
+        <div class="points">Grade point: ${points}</div>
+      `;
+
+      if (nextMark !== null) {
+        html += `
+          <div class="improve">
+            You need ${nextMark} more marks to reach ${nextGrade} grade and ${nextPoint} grade points.
+          </div>
+        `;
+      }
+
+      result.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
