@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Grade Calculator</title>
 
-  <!-- Google AdSense -->
-  <script async 
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9357039039607923"
-      crossorigin="anonymous"></script>
+  <!-- AdSense Verification / Ad Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9357039039607923"
+     crossorigin="anonymous"></script>
 
   <style>
     body {
@@ -29,6 +28,12 @@
       border-radius: 16px;
       box-shadow: 0 25px 50px rgba(0,0,0,.15);
       text-align: center;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: 24px;
+      color: #333;
     }
 
     input, button {
@@ -59,11 +64,10 @@
     }
 
     .ad {
-      margin-top: 20px;
+      margin-top: 25px;
     }
   </style>
 </head>
-
 <body>
   <div class="card">
     <h2>Grade Calculator</h2>
@@ -73,7 +77,12 @@
 
     <div class="result" id="result"></div>
 
-    <!-- Ads (hidden for premium users) -->
+    <!-- Premium Button -->
+    <button class="premium" onclick="buyPremium()" id="premiumBtn">
+      Unlock Premium – $1 (Remove Ads)
+    </button>
+
+    <!-- AdSense Ad Unit (shown only for non-premium users) -->
     <div class="ad" id="adBox">
       <ins class="adsbygoogle"
            style="display:block"
@@ -83,64 +92,59 @@
            data-full-width-responsive="true"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
-
-    <!-- Premium Unlock Button -->
-    <button class="premium" onclick="buyPremium()" id="premiumBtn">
-      Unlock Premium – $1 (Remove Ads)
-    </button>
   </div>
 
-<script>
-  // Check premium status
-  const isPremium = localStorage.getItem("premium");
-  if (isPremium) {
-    document.getElementById("adBox").style.display = "none";
-    document.getElementById("premiumBtn").style.display = "none";
-  }
-
-  // Grade calculator logic
-  function calculate() {
-    const m = Number(document.getElementById("marks").value);
-    const r = document.getElementById("result");
-
-    if (m < 0 || m > 100 || isNaN(m)) {
-      r.innerHTML = "<div class='fail'>Enter valid marks (0–100)</div>";
-      return;
+  <script>
+    // Check premium status
+    const isPremium = localStorage.getItem("premium");
+    if (isPremium) {
+      document.getElementById("adBox").style.display = "none";
+      document.getElementById("premiumBtn").style.display = "none";
     }
 
-    let g, p, need, ng, np;
+    // Grade Calculator Logic
+    function calculate() {
+      const m = Number(document.getElementById("marks").value);
+      const r = document.getElementById("result");
 
-    if (m >= 85) { g="O"; p=10; }
-    else if (m >= 75) { g="A+"; p=9; need=85-m; ng="O"; np=10; }
-    else if (m >= 65) { g="A"; p=8; need=75-m; ng="A+"; np=9; }
-    else if (m >= 55) { g="B+"; p=7; need=65-m; ng="A"; np=8; }
-    else if (m >= 45) { g="B"; p=6; need=55-m; ng="B+"; np=7; }
-    else if (m >= 35) { g="C"; p=5; need=45-m; ng="B"; np=6; }
-    else {
-      r.innerHTML = "<div class='fail'>Fail<br>Start saving for supplementary exam dear</div>";
-      return;
+      if (m < 0 || m > 100 || isNaN(m)) {
+        r.innerHTML = "<div class='fail'>Enter valid marks (0–100)</div>";
+        return;
+      }
+
+      let g, p, need, ng, np;
+
+      if (m >= 85) { g="O"; p=10; }
+      else if (m >= 75) { g="A+"; p=9; need=85-m; ng="O"; np=10; }
+      else if (m >= 65) { g="A"; p=8; need=75-m; ng="A+"; np=9; }
+      else if (m >= 55) { g="B+"; p=7; need=65-m; ng="A"; np=8; }
+      else if (m >= 45) { g="B"; p=6; need=55-m; ng="B+"; np=7; }
+      else if (m >= 35) { g="C"; p=5; need=45-m; ng="B"; np=6; }
+      else {
+        r.innerHTML = "<div class='fail'>Fail<br>Start saving for supplementary exam dear</div>";
+        return;
+      }
+
+      r.innerHTML = `
+        <div><strong>Your grade is ${g}</strong></div>
+        <div>Grade point: ${p}</div>
+        ${need ? `<div class="improve">You need ${need} more marks for ${ng} (${np})</div>` : ""}
+      `;
     }
 
-    r.innerHTML = `
-      <div><strong>Your grade is ${g}</strong></div>
-      <div>Grade point: ${p}</div>
-      ${need ? `<div class="improve">You need ${need} more marks for ${ng} (${np})</div>` : ""}
-    `;
-  }
+    // Premium Button Logic
+    function buyPremium() {
+      // Replace with your Stripe payment link
+      window.location.href = "https://buy.stripe.com/test_XXXXXXXXXX";
+    }
 
-  // Premium button logic
-  function buyPremium() {
-    // Replace with your Stripe Payment Link
-    window.location.href = "https://buy.stripe.com/test_XXXXXXXXXX";
-  }
-
-  // Optional: handle Stripe redirect for premium unlock
-  if (new URLSearchParams(window.location.search).get("premium")) {
-    localStorage.setItem("premium", "true");
-    window.history.replaceState({}, document.title, "/");
-    document.getElementById("adBox").style.display = "none";
-    document.getElementById("premiumBtn").style.display = "none";
-  }
-</script>
+    // Handle Stripe redirect after premium payment
+    if (new URLSearchParams(window.location.search).get("premium")) {
+      localStorage.setItem("premium", "true");
+      window.history.replaceState({}, document.title, "/");
+      document.getElementById("adBox").style.display = "none";
+      document.getElementById("premiumBtn").style.display = "none";
+    }
+  </script>
 </body>
 </html>
