@@ -18,16 +18,20 @@
       align-items: center;
       background: linear-gradient(135deg, #6366f1, #9333ea);
       font-family: system-ui, sans-serif;
+      padding: 20px;
     }
 
     .card {
       background: white;
-      padding: 30px;
+      padding: 40px 30px;
       width: 100%;
       max-width: 400px;
-      border-radius: 16px;
+      border-radius: 20px;
       box-shadow: 0 25px 50px rgba(0,0,0,.15);
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     h2 {
@@ -57,12 +61,6 @@
     .improve { color: #16a34a; margin-top: 8px; }
     .fail { color: #dc2626; font-weight: 600; }
 
-    .premium {
-      margin-top: 20px;
-      background: #facc15;
-      color: #000;
-    }
-
     .ad {
       margin-top: 25px;
     }
@@ -77,12 +75,7 @@
 
     <div class="result" id="result"></div>
 
-    <!-- Premium Button -->
-    <button class="premium" onclick="buyPremium()" id="premiumBtn">
-      Unlock Premium – $1 (Remove Ads)
-    </button>
-
-    <!-- AdSense Ad Unit (shown only for non-premium users) -->
+    <!-- AdSense Ad Unit -->
     <div class="ad" id="adBox">
       <ins class="adsbygoogle"
            style="display:block"
@@ -95,14 +88,6 @@
   </div>
 
   <script>
-    // Check premium status
-    const isPremium = localStorage.getItem("premium");
-    if (isPremium) {
-      document.getElementById("adBox").style.display = "none";
-      document.getElementById("premiumBtn").style.display = "none";
-    }
-
-    // Grade Calculator Logic
     function calculate() {
       const m = Number(document.getElementById("marks").value);
       const r = document.getElementById("result");
@@ -130,20 +115,6 @@
         <div>Grade point: ${p}</div>
         ${need ? `<div class="improve">You need ${need} more marks for ${ng} (${np})</div>` : ""}
       `;
-    }
-
-    // Premium Button Logic
-    function buyPremium() {
-      // Replace with your Stripe payment link
-      window.location.href = "https://buy.stripe.com/test_XXXXXXXXXX";
-    }
-
-    // Handle Stripe redirect after premium payment
-    if (new URLSearchParams(window.location.search).get("premium")) {
-      localStorage.setItem("premium", "true");
-      window.history.replaceState({}, document.title, "/");
-      document.getElementById("adBox").style.display = "none";
-      document.getElementById("premiumBtn").style.display = "none";
     }
   </script>
 </body>
