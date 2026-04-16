@@ -1,0 +1,142 @@
+<!-- Aim: to build a chatbot using javascript-->
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Chatbox</title>
+
+    <style>
+        .container {
+            width: 100%;
+            max-width: 800px; 
+            margin: auto; 
+            padding: 15px; 
+            border: 1px solid #ccc;
+            background-color: #ddbce0; 
+        }
+
+        #chatBox {
+            height: 300px;
+            border: 1px solid rgb(100, 99, 99);
+            padding: 10px;
+            overflow-y: auto;
+            background-color: white;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+
+        .user {
+            background-color: #d1e7ff;
+            text-align: right;
+        }
+
+        .bot {
+            background-color: #e2e2e2;
+            text-align: left;
+        }
+
+        .input-area {
+            display: flex;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+        }
+
+        button {
+            padding: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Smart Chatbox</h1>
+
+    <div id="chatBox"></div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type a message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+
+const chatbotData = {
+    "hi": "Hello.",
+    "hello": "Hi there.",
+    "how are you": "I am functioning properly. How can I assist you?",
+    "html": "HTML stands for HyperText Markup Language.",
+    "css": "CSS is used to style web pages.",
+    "javascript": "JavaScript makes websites interactive."
+};
+
+function sendMessage() {
+
+    let input = document.getElementById("userInput");
+    let message = input.value.trim();
+
+    if (message === "") return;
+
+    let chatBox = document.getElementById("chatBox");
+
+    // User message
+    let userMsg = document.createElement("div");
+    userMsg.classList.add("message", "user");
+    userMsg.textContent = message;
+    chatBox.appendChild(userMsg);
+
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Simulated response delay
+    setTimeout(() => {
+
+        let botMsg = document.createElement("div");
+        botMsg.classList.add("message", "bot");
+
+        let userText = message.toLowerCase();
+        let response = null;
+
+        // Membership check
+        for (let key in chatbotData) {
+            if (userText.includes(key)) {
+                response = chatbotData[key];
+                break;
+            }
+        }
+
+        if (!response) {
+            response = "I do not understand that query yet. Please ask about HTML, CSS, or JavaScript.";
+        }
+
+        botMsg.textContent = response;
+        chatBox.appendChild(botMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+    }, 500);
+}
+
+// Enter key support
+document.getElementById("userInput")
+.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+
+</script>
+
+</body>
+</html>
