@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Grade Calculator</title>
 
-  <!-- AdSense Verification / Ad Script -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9357039039607923"
-     crossorigin="anonymous"></script>
+
 
   <style>
     body {
@@ -21,11 +19,18 @@
       padding: 20px;
     }
 
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 500px;
+    }
+
     .card {
       background: white;
       padding: 40px 30px;
       width: 100%;
-      max-width: 400px;
       border-radius: 20px;
       box-shadow: 0 25px 50px rgba(0,0,0,.15);
       text-align: center;
@@ -34,89 +39,405 @@
       justify-content: center;
     }
 
-    h2 {
-      margin: 0 0 20px;
-      font-size: 24px;
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
       color: #333;
     }
 
-    input, button {
+    .subtitle {
+      margin: 0 0 25px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    input {
       width: 100%;
-      padding: 14px;
-      margin-top: 12px;
+      padding: 12px;
       border-radius: 10px;
       border: 1px solid #ddd;
       font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
     button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: none;
       background: #6366f1;
       color: white;
       font-weight: 600;
       cursor: pointer;
-      border: none;
+      font-size: 16px;
     }
 
-    .result { margin-top: 20px; }
-    .improve { color: #16a34a; margin-top: 8px; }
-    .fail { color: #dc2626; font-weight: 600; }
+    button:hover {
+      background: #4f46e5;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .grade-display {
+      font-size: 48px;
+      font-weight: bold;
+      color: #6366f1;
+      margin: 15px 0;
+    }
+
+    .grade-info {
+      font-size: 16px;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    .marks-breakdown {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: left;
+      border-left: 4px solid #6366f1;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .breakdown-item strong {
+      color: #333;
+    }
+
+    .breakdown-item span {
+      color: #666;
+    }
+
+    .total-marks {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      border-top: 2px solid #ddd;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .improvements {
+      background: #e0f2fe;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: left;
+      border-left: 4px solid #0284c7;
+    }
+
+    .improvement-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .improvement-item .grade-target {
+      font-weight: 600;
+      color: #0284c7;
+    }
+
+    .improvement-item .marks-needed {
+      background: #0284c7;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .motivation-quote {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .motivation-quote::before {
+      content: '"';
+      font-size: 32px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .fail {
+      color: #dc2626;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .youtube-section {
+      margin-top: 25px;
+    }
+
+    .youtube-section h3 {
+      margin: 0 0 15px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .youtube-section iframe {
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.1);
+    }
 
     .ad {
       margin-top: 25px;
     }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 25px 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+
+      .grade-display {
+        font-size: 40px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Grade Calculator</h1>
-    <h2> welcome to the grade calculator </h2>
+  <div class="container">
+    <div class="card">
+      <h1>📊 Grade Calculator</h1>
+      <p class="subtitle">Calculate your final grade based on continuous assessment</p>
 
-    <input type="number" id="marks" placeholder="Enter marks out of 100" />
-    <button onclick="calculate()">Calculate</button>
+      <div class="input-group">
+        <label for="internal">Internal Marks (out of 100)</label>
+        <input type="number" id="internal" placeholder="Enter marks" min="0" max="100" />
+      </div>
 
-    <div class="result" id="result"></div>
+      <div class="input-group">
+        <label for="midterm">Mid-Term Marks (out of 100)</label>
+        <input type="number" id="midterm" placeholder="Enter marks" min="0" max="100" />
+      </div>
 
-    <!-- AdSense Ad Unit -->
-    <div class="ad" id="adBox">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9357039039607923"
-           data-ad-slot="1234567890"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <div class="input-group">
+        <label for="endterm">End-Term Marks (out of 100)</label>
+        <input type="number" id="endterm" placeholder="Enter marks" min="0" max="100" />
+      </div>
+
+      <button onclick="calculate()">Calculate Grade</button>
+
+      <div class="result" id="result"></div>
+
+      <div class="youtube-section">
+        <h3>📱 Learn More on YouTube Shorts</h3>
+        <iframe width="100%" height="500" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube Shorts" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
     </div>
+
+    <div id="motivationContainer"></div>
   </div>
 
   <script>
-    function calculate() {
-      const m = Number(document.getElementById("marks").value);
-      const r = document.getElementById("result");
+    // Motivational quotes array
+    const quotes = [
+      "Excellence is not a skill, it's an attitude! 🌟",
+      "Your future is created by what you do today, not tomorrow! 💪",
+      "Don't watch the clock; do what it does. Keep going! ⏰",
+      "Success is the sum of small efforts repeated day in and day out! 📈",
+      "Believe you can and you're halfway there! 🚀",
+      "The only way to do great work is to love what you do! ❤️",
+      "Dream big and dare to fail! 🎯",
+      "You are capable of amazing things! ✨",
+      "Today's effort is tomorrow's success! 🌅",
+      "Keep pushing, the best is yet to come! 🏆",
+      "Hard work beats talent when talent isn't working hard! 💯",
+      "Every expert was once a beginner! 🌱",
+      "Success is not final, failure is not fatal! 🔥",
+      "You've got this! Now go show the world! 🌍",
+      "The highest achievement is always one step ahead! 👑"
+    ];
 
-      if (m < 0 || m > 100 || isNaN(m)) {
-        r.innerHTML = "<div class='fail'>Enter valid marks (0–100)</div>";
-        return;
-      }
+    function getRandomQuote() {
+      return quotes[Math.floor(Math.random() * quotes.length)];
+    }
 
-      let g, p, need, ng, np;
-
-      if (m >= 85) { g="O"; p=10; }
-      else if (m >= 75) { g="A+"; p=9; need=85-m; ng="O"; np=10; }
-      else if (m >= 65) { g="A"; p=8; need=75-m; ng="A+"; np=9; }
-      else if (m >= 55) { g="B+"; p=7; need=65-m; ng="A"; np=8; }
-      else if (m >= 45) { g="B"; p=6; need=55-m; ng="B+"; np=7; }
-      else if (m >= 35) { g="C"; p=5; need=45-m; ng="B"; np=6; }
-      else {
-        r.innerHTML = "<div class='fail'>Fail<br>Start saving for supplementary exam dear</div>";
-        return;
-      }
-
-      r.innerHTML = `
-        <div><strong>Your grade is ${g}</strong></div>
-        <div>Grade point: ${p}</div>
-        ${need ? `<div class="improve">You need ${need} more marks for ${ng} (${np})</div>` : ""}
+    function displayMotivation() {
+      const container = document.getElementById("motivationContainer");
+      container.innerHTML = `
+        <div class="card motivation-quote">
+          ${getRandomQuote()}
+        </div>
       `;
     }
+
+    function calculate() {
+      const internal = Number(document.getElementById("internal").value);
+      const midterm = Number(document.getElementById("midterm").value);
+      const endterm = Number(document.getElementById("endterm").value);
+      const r = document.getElementById("result");
+
+      // Validation
+      if (isNaN(internal) || isNaN(midterm) || isNaN(endterm)) {
+        r.innerHTML = "<div class='fail'>❌ Please fill all fields with valid numbers</div>";
+        r.classList.add("show");
+        return;
+      }
+
+      if (internal < 0 || internal > 100 || midterm < 0 || midterm > 100 || endterm < 0 || endterm > 100) {
+        r.innerHTML = "<div class='fail'>❌ Please enter marks between 0 and 100</div>";
+        r.classList.add("show");
+        return;
+      }
+
+      // Calculate final marks
+      const finalMarks = (internal * 0.5) + (midterm * 0.2) + (endterm * 0.3);
+      const finalMarksRounded = Math.round(finalMarks * 10) / 10;
+
+      // Determine grade
+      let grade, gradePoint;
+      
+      if (finalMarks >= 85) {
+        grade = "O";
+        gradePoint = 10;
+      } else if (finalMarks >= 75) {
+        grade = "A+";
+        gradePoint = 9;
+      } else if (finalMarks >= 65) {
+        grade = "A";
+        gradePoint = 8;
+      } else if (finalMarks >= 55) {
+        grade = "B+";
+        gradePoint = 7;
+      } else if (finalMarks >= 45) {
+        grade = "B";
+        gradePoint = 6;
+      } else if (finalMarks >= 35) {
+        grade = "C";
+        gradePoint = 5;
+      } else {
+        r.innerHTML = `
+          <div class='fail'>❌ Fail (${finalMarksRounded}%)</div>
+          <p style="color: #666; margin-top: 10px; font-size: 14px;">
+            Don't lose hope! Start preparing for the supplementary exam. You can do better! 💪
+          </p>
+        `;
+        r.classList.add("show");
+        return;
+      } 
+
+      // Calculate marks needed for higher grades
+      const gradeThresholds = [
+        { name: "B", point: 6, threshold: 45 },
+        { name: "B+", point: 7, threshold: 55 },
+        { name: "A", point: 8, threshold: 65 },
+        { name: "A+", point: 9, threshold: 75 },
+        { name: "O", point: 10, threshold: 85 }
+      ];
+
+      let improvementsHTML = "";
+      for (const gradeLevel of gradeThresholds) {
+        if (gradeLevel.threshold > finalMarks) {
+          const marksNeeded = Math.ceil(gradeLevel.threshold - finalMarks);
+          improvementsHTML += `
+            <div class="improvement-item">
+              <span class="grade-target">Grade ${gradeLevel.name} (${gradeLevel.point})</span>
+              <span class="marks-needed">+${marksNeeded} more marks</span>
+            </div>
+          `;
+        }
+      }
+
+      // Build result HTML
+      r.innerHTML = `
+        <div class="grade-display">
+          ${grade === "O" ? "🏆" : "✅"} ${grade}
+        </div>
+        <div class="grade-info">
+          Final Percentage: <strong>${finalMarksRounded}%</strong> | Grade Point: <strong>${gradePoint}</strong>
+        </div>
+
+        <div class="marks-breakdown">
+          <div class="breakdown-item">
+            <strong>Internal (50%):</strong>
+            <span>${internal} × 0.5 = ${internal * 0.5}</span>
+          </div>
+          <div class="breakdown-item">
+            <strong>Mid-Term (20%):</strong>
+            <span>${midterm} × 0.2 = ${midterm * 0.2}</span>
+          </div>
+          <div class="breakdown-item">
+            <strong>End-Term (30%):</strong>
+            <span>${endterm} × 0.3 = ${endterm * 0.3}</span>
+          </div>
+          <div class="total-marks">
+            Total Final Marks: ${finalMarksRounded}%
+          </div>
+        </div>
+
+        ${improvementsHTML ? `
+          <div class="improvements">
+            <div style="font-weight: 600; color: #0284c7; margin-bottom: 10px;">
+              🎯 Path to Excellence
+            </div>
+            ${improvementsHTML}
+          </div>
+        ` : `
+          <div class="improvements" style="background: #dcfce7; border-left-color: #16a34a;">
+            <div style="font-weight: 600; color: #16a34a;">
+              🌟 Outstanding Achievement!
+            </div>
+            <p style="margin: 8px 0; color: #166534; font-size: 14px;">
+              You've reached the highest grade (O)! Keep maintaining this excellence! 👏
+            </p>
+          </div>
+        `}
+      `;
+      
+      r.classList.add("show");
+    }
+
+    // Load motivational quote when page loads
+    window.addEventListener("load", displayMotivation);
   </script>
 </body>
 </html>
